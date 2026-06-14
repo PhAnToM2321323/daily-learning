@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日学习 / 日日進步</title>
+<style>
+  :root {
+    --bg: #F4F1EA;
+    --ink: #2C2C2A;
+    --muted: #888780;
+    --rule: #D3D1C7;
+    --accent: #D85A30;
+    --accent-soft: #FAECE7;
+    --teal: #0F6E56;
+    --teal-soft: #E1F5EE;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans SC", "PingFang SC", "Microsoft Yahei", sans-serif;
+    line-height: 1.7;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  header h1 {
+    font-family: Georgia, "Songti SC", serif;
+    font-size: 1.8rem;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+  header .date {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  section.card {
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.2rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--accent-soft);
+  }
+  section.cantonese .card-head { background: var(--teal-soft); }
+  .card-head .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .card-head h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 500;
+  }
+  .card-body { padding: 1.2rem 1.4rem; }
+  .card-body p { margin: 0 0 0.9rem; }
+  .card-body p:last-child { margin-bottom: 0; }
+
+  /* reasoning */
+  .reasoning-question {
+    font-size: 1rem;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 0.8rem 1rem;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 1rem;
+  }
+  details {
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+    background: var(--bg);
+  }
+  details summary {
+    cursor: pointer;
+    padding: 0.7rem 1rem;
+    font-weight: 500;
+    list-style: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before {
+    content: "▸ ";
+    color: var(--accent);
+  }
+  details[open] summary::before { content: "▾ "; }
+  details .inner { padding: 0 1rem 1rem; }
+  ol.steps { padding-left: 1.2rem; margin: 0; }
+  ol.steps li { margin-bottom: 0.4rem; }
+  .answer-box {
+    background: var(--teal-soft);
+    border-left: 3px solid var(--teal);
+    padding: 0.8rem 1rem;
+    border-radius: 0 4px 4px 0;
+    font-weight: 500;
+  }
+  .takeaway {
+    margin-top: 0.9rem;
+    font-size: 0.92rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ai news */
+  .news-item {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .news-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .news-item h3 {
+    margin: 0 0 0.3rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .news-source {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* finance */
+  .concept-name {
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin-bottom: 0.6rem;
+  }
+  .misund {
+    background: var(--accent-soft);
+    border-radius: 4px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.92rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+  }
+  .tag {
+    font-size: 0.78rem;
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+    padding: 0.15rem 0.7rem;
+    color: var(--muted);
+  }
+
+  /* cantonese */
+  .phrase-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .phrase {
+    font-family: "Songti SC", Georgia, serif;
+    font-size: 1.6rem;
+  }
+  .jyutping {
+    font-size: 0.95rem;
+    color: var(--teal);
+    font-variant-numeric: tabular-nums;
+  }
+  .example-block {
+    background: var(--teal-soft);
+    border-radius: 4px;
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+  }
+  .example-block .zh { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; }
+  .usage-note {
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+
+  .empty-state, .error-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+  }
+  .error-state code {
+    display: block;
+    margin-top: 1rem;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.8rem;
+    font-size: 0.85rem;
+    text-align: left;
+    white-space: pre-wrap;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>每日学习</h1>
+    <span class="date" id="date-display">载入中…</span>
+  </header>
+
+  <div id="content">
+    <div class="empty-state">正在载入今日内容…</div>
+  </div>
+</div>
+
+<script>
+async function loadContent() {
+  const container = document.getElementById('content');
+  const dateDisplay = document.getElementById('date-display');
+
+  let data;
+  try {
+    const res = await fetch('daily_content.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('找不到 daily_content.json');
+    data = await res.json();
+  } catch (e) {
+    container.innerHTML = `
+      <div class="error-state">
+        <p>暂时找不到今日内容文件 <strong>daily_content.json</strong>。</p>
+        <p>请先运行 <code>python generate_daily.py</code> 生成内容，
+        并确保它和本网页放在同一目录下。</p>
+        <code>${e.message}</code>
+      </div>`;
+    return;
+  }
+
+  dateDisplay.textContent = data.date || '';
+
+  let html = '';
+
+  // 1. 推理思路
+  if (data.reasoning && !data.reasoning.parse_error) {
+    const r = data.reasoning;
+    html += `
+    <section class="card reasoning">
+      <div class="card-head">
+        <span class="eyebrow">推理训练</span>
+      </div>
+      <div class="card-body">
+        <h2 style="font-weight:500; font-size:1.1rem; margin:0 0 0.6rem;">${escapeHtml(r.title || '')}</h2>
+        <div class="reasoning-question">${escapeHtml(r.question || '')}</div>
+        ${r.hints && r.hints.length ? `<p style="font-size:0.9rem; color:var(--muted);">提示：${r.hints.map(escapeHtml).join(' / ')}</p>` : ''}
+        <details>
+          <summary>查看推理过程与答案</summary>
+          <div class="inner">
+            <ol class="steps">
+              ${(r.reasoning_steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+            </ol>
+            <div class="answer-box">答案：${escapeHtml(r.answer || '')}</div>
+            ${r.takeaway ? `<div class="takeaway">${escapeHtml(r.takeaway)}</div>` : ''}
+          </div>
+        </details>
+      </div>
+    </section>`;
+  }
+
+  // 2. AI 新闻
+  if (data.ai_news && !data.ai_news.parse_error) {
+    const n = data.ai_news;
+    html += `
+    <section class="card">
+      <div class="card-head">
+        <span class="eyebrow">AI 新闻</span>
+      </div>
+      <div class="card-body">
+        ${(n.items || []).map(item => `
+          <div class="news-item">
+            <h3>${escapeHtml(item.headline || '')}</h3>
+            <p style="margin-bottom:0.3rem;">${escapeHtml(item.summary || '')}</p>
+            <span class="news-source">${escapeHtml(item.source || '')}</span>
+          </div>`).join('')}
+      </div>
+    </section>`;
+  }
+
+  // 3. 金融知识
+  if (data.finance && !data.finance.parse_error) {
+    const f = data.finance;
+    html += `
+    <section class="card">
+      <div class="card-head">
+        <span class="eyebrow">金融知识</span>
+      </div>
+      <div class="card-body">
+        <div class="concept-name">${escapeHtml(f.concept || '')}</div>
+        <p>${escapeHtml(f.explanation || '')}</p>
+        <p><strong style="font-weight:500;">例子：</strong>${escapeHtml(f.example || '')}</p>
+        ${f.common_misunderstanding ? `<div class="misund"><strong style="font-weight:500;">容易混淆：</strong>${escapeHtml(f.common_misunderstanding)}</div>` : ''}
+        ${f.related_terms && f.related_terms.length ? `<div class="tags">${f.related_terms.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+      </div>
+    </section>`;
+  }
+
+  // 4. 粤语知识
+  if (data.cantonese && !data.cantonese.parse_error) {
+    const c = data.cantonese;
+    html += `
+    <section class="card cantonese">
+      <div class="card-head">
+        <span class="eyebrow">粤语知识</span>
+      </div>
+      <div class="card-body">
+        <div class="phrase-row">
+          <span class="phrase">${escapeHtml(c.phrase || '')}</span>
+          <span class="jyutping">${escapeHtml(c.jyutping || '')}</span>
+        </div>
+        <p>${escapeHtml(c.meaning || '')}</p>
+        <div class="example-block">
+          <div>${escapeHtml(c.example_sentence || '')}</div>
+          <div class="zh">${escapeHtml(c.example_translation || '')}</div>
+        </div>
+        ${c.usage_note ? `<p class="usage-note">${escapeHtml(c.usage_note)}</p>` : ''}
+      </div>
+    </section>`;
+  }
+
+  container.innerHTML = html || '<div class="empty-state">今日内容为空。</div>';
+}
+
+function escapeHtml(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+loadContent();
+</script>
+</body>
+</html>
