@@ -99,6 +99,10 @@ def gen_ai_news():
 
 如果搜索没有返回任何相关内容，请仍然按上述格式输出，
 items 可以基于你已知的近期重要 AI 趋势话题，但要在 summary 开头注明"（基于已知信息，非当日最新）"。
+
+【重要格式要求】最终回复必须只包含纯 JSON 内容本身，不要有任何开场白
+（例如"好的，我已经搜索到了"之类的句子），不要用 markdown 代码块包裹（不要加```json或```），
+直接以 { 开头、以 } 结尾。
 """
     text = ask_claude(prompt, use_web_search=True)
     return safe_json(text)
@@ -160,13 +164,27 @@ def gen_cantonese():
 
 
 def safe_json(text: str):
-    """尝试解析 JSON，去除可能的 markdown 代码块标记"""
+    """尝试解析 JSON，去除可能的 markdown 代码块标记和前后多余文字"""
     cleaned = text.strip()
-    if cleaned.startswith("```"):
-        cleaned = cleaned.split("```")[1]
-        if cleaned.startswith("json"):
-            cleaned = cleaned[4:]
-        cleaned = cleaned.strip()
+
+    # 优先尝试：提取 ```json ... ``` 或 ``` ... ``` 代码块内的内容
+    if "```" in cleaned:
+        parts = cleaned.split("```")
+        for part in parts:
+            candidate = part.strip()
+            if candidate.startswith("json"):
+                candidate = candidate[4:].strip()
+            if candidate.startswith("{") or candidate.startswith("["):
+                cleaned = candidate
+                break
+
+    # 如果还是不是以 { 或 [ 开头，找到第一个 { 和最后一个 } 之间的内容
+    if not (cleaned.startswith("{") or cleaned.startswith("[")):
+        start = cleaned.find("{")
+        end = cleaned.rfind("}")
+        if start != -1 and end != -1 and end > start:
+            cleaned = cleaned[start:end + 1]
+
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError:
