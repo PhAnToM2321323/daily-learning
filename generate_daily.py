@@ -101,8 +101,8 @@ def gen_ai_news():
 items 可以基于你已知的近期重要 AI 趋势话题，但要在 summary 开头注明"（基于已知信息，非当日最新）"。
 
 【重要格式要求】最终回复必须只包含纯 JSON 内容本身，不要有任何开场白
-（例如"好的，我已经搜索到了"之类的句子），不要用 markdown 代码块包裹（不要加```json或```），
-直接以 { 开头`以 } 结尾。
+（例如"好的，我已经搜索到了"之类的句子），不要用 markdown 代码块包裹（不要加三个反引号加json或三个反引号），
+直接以左花括号开头、以右花括号结尾。
 """
     text = ask_claude(prompt, use_web_search=True)
     return safe_json(text)
