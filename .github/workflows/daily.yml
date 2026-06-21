@@ -33,6 +33,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add daily_content.json
+          git add daily_content.json topics_history.json
           git diff --staged --quiet || git commit -m "每日内容更新: $(date +'%Y-%m-%d')"
           git push
